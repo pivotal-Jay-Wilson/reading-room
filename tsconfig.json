@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "experimentalDecorators": true,
+    "outFile": "build/Code.js",
+    "downlevelIteration": true
+  },
+  "include": ["src/**/*"], 
+}

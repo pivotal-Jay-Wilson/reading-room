@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        [type="date"] {
+            background: #fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png) 97% 50% no-repeat;
+        }
+
+        [type="date"]::-webkit-inner-spin-button {
+            display: none;
+        }
+
+        [type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0;
+        }
+
+        /* custom styles */
+        body {
+            padding: 4em;
+            background: #e5e5e5;
+            font: 13px/1.4 Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+        }
+
+        label {
+            display: block;
+        }
+
+        input {
+            border: 1px solid #c4c4c4;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 3px 5px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            width: 190px;
+        }
+
+        .lds-hourglass {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            left: 140px;
+            top: 40px;            
+        }
+
+        .lds-hourglass:after {
+            content: " ";
+            display: block;
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            margin: 8px;
+            box-sizing: border-box;
+            border: 32px solid #fff;
+            border-color: #fff transparent #fff transparent;
+            animation: lds-hourglass 1.2s infinite;
+        }
+
+        @keyframes lds-hourglass {
+            0% {
+                transform: rotate(0);
+                animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            }
+
+            50% {
+                transform: rotate(900deg);
+                animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+            }
+
+            100% {
+                transform: rotate(1800deg);
+            }
+        }
+    </style>
+    <script>
+        const show = (e) => {
+            let elem = document.getElementById(e);
+            elem.style.display = 'block';
+        };
+        const hide = (e) => {
+            let elem = document.getElementById(e);
+            elem.style.display = 'none';
+        };
+        const disable = (e) => {
+            let elem = document.getElementById(e);
+            elem.disabled = true;
+        };
+        const enable = (e) => {
+            let elem = document.getElementById(e);
+            elem.disabled = false;
+        };
+        function load() {
+            document.getElementById('rundate').value = new Date().toISOString().substring(0, 10);
+            hide('spinner');
+            show('form');
+            enable('btnRundate')            
+        }
+
+        function addKbtest() {
+            show('spinner');
+            hide('form');
+            disable('btnRundate');
+            var element = document.getElementById("rundate");
+            google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).addKbs(element.value);
+        }
+        function onFailure(error) {
+            hide('spinner');
+            var div = document.getElementById('output');
+            div.innerHTML = "ERROR: " + error.message;
+        }
+        function onSuccess(numUnread) {
+            google.script.host.close();
+        }
+    </script>
+</head>
+
+<body onload="load()">
+    <div id='spinner' class="lds-hourglass"></div>
+    <div id='form'>
+        <label for="rundate">Date to Run</label>
+        <input type="date" id="rundate">
+        <input type="button" id="btnRundate" value="Run" onclick="addKbsTKG()" />
+    </div>
+    <div id="output"></div>
+
+</body>
+
+</html>
